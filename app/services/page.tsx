@@ -1,3 +1,4 @@
+import { getServices } from "@/lib/supabase"
 import Image from "next/image"
 import Link from "next/link"
 import { ArrowRight, CheckCircle } from "lucide-react"
@@ -10,7 +11,9 @@ export const metadata = {
     "Explore BuildMaster's comprehensive construction services including residential, commercial, industrial, and architectural design solutions.",
 }
 
-export default function ServicesPage() {
+export default async function ServicesPage() {
+  const services = await getServices()
+
   return (
     <div className="flex min-h-screen flex-col">
       {/* Hero Section */}
@@ -48,14 +51,14 @@ export default function ServicesPage() {
             </p>
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-10 max-w-6xl mx-auto">
-            {services.map((service, index) => (
+            {services.map((service) => (
               <div
-                key={index}
+                key={service.id}
                 className="bg-gray-50 rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 group"
               >
                 <div className="relative h-48 md:h-56 overflow-hidden">
                   <Image
-                    src={service.image || "/placeholder.svg"}
+                    src={service.image || "/images/services-hero.png"}
                     alt={service.title}
                     fill
                     className="object-cover transition-transform duration-500 group-hover:scale-110"
@@ -65,7 +68,7 @@ export default function ServicesPage() {
                 <div className="p-6 md:p-8">
                   <h3 className="text-xl md:text-2xl font-bold mb-3 md:mb-4">{service.title}</h3>
                   <p className="text-gray-700 mb-5 md:mb-6 text-sm sm:text-base">{service.description}</p>
-                  <Link href={service.link}>
+                  <Link href={`/services/${service.slug}`}>
                     <Button className="bg-amber-500 hover:bg-amber-600 text-black w-full">
                       Learn More
                       <ArrowRight className="ml-2 h-4 w-4" />
@@ -184,46 +187,6 @@ export default function ServicesPage() {
   )
 }
 
-// Sample data
-const services = [
-  {
-    title: "Residential Construction",
-    description: "Custom home building, renovations, and additions tailored to your lifestyle and preferences.",
-    image: "/images/residential-1.png",
-    link: "/services/residential",
-  },
-  {
-    title: "Commercial Development",
-    description:
-      "Office buildings, retail spaces, and hospitality venues designed for functionality and aesthetic appeal.",
-    image: "/images/commercial-1.png",
-    link: "/services/commercial",
-  },
-  {
-    title: "Industrial Facilities",
-    description: "Manufacturing plants, warehouses, and distribution centers built for efficiency and durability.",
-    image: "/images/industrial-1.png",
-    link: "/services/industrial",
-  },
-  {
-    title: "Architectural Design",
-    description: "Innovative architectural solutions that balance form, function, and sustainability.",
-    image: "/images/project-3.png",
-    link: "/services/design",
-  },
-  {
-    title: "Project Management",
-    description: "Comprehensive oversight of construction projects from planning to completion.",
-    image: "/images/process.png",
-    link: "/services/management",
-  },
-  {
-    title: "Sustainable Building",
-    description: "Eco-friendly construction practices and materials for environmentally conscious projects.",
-    image: "/images/residential-2.png",
-    link: "/services/sustainable",
-  },
-]
 
 const processSteps = [
   {

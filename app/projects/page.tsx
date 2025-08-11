@@ -1,3 +1,4 @@
+import { getProjects } from "@/lib/supabase"
 import Image from "next/image"
 import Link from "next/link"
 import { ArrowRight } from "lucide-react"
@@ -12,7 +13,9 @@ export const metadata = {
     "Explore BuildMaster's portfolio of completed construction projects across residential, commercial, and industrial sectors.",
 }
 
-export default function ProjectsPage() {
+export default async function ProjectsPage() {
+  const projects = await getProjects()
+
   return (
     <div className="flex min-h-screen flex-col">
       {/* Hero Section */}
@@ -71,8 +74,8 @@ export default function ProjectsPage() {
 
               <TabsContent value="all" className="mt-6 md:mt-8">
                 <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-                  {projects.map((project, index) => (
-                    <ProjectCard key={index} project={project} />
+                  {projects.map((project) => (
+                    <ProjectCard key={project.id} project={project} />
                   ))}
                 </div>
               </TabsContent>
@@ -80,9 +83,9 @@ export default function ProjectsPage() {
               <TabsContent value="residential" className="mt-6 md:mt-8">
                 <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
                   {projects
-                    .filter((project) => project.category === "Residential")
-                    .map((project, index) => (
-                      <ProjectCard key={index} project={project} />
+                    .filter((project) => project.category === "Konut")
+                    .map((project) => (
+                      <ProjectCard key={project.id} project={project} />
                     ))}
                 </div>
               </TabsContent>
@@ -90,9 +93,9 @@ export default function ProjectsPage() {
               <TabsContent value="commercial" className="mt-6 md:mt-8">
                 <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
                   {projects
-                    .filter((project) => project.category === "Commercial")
-                    .map((project, index) => (
-                      <ProjectCard key={index} project={project} />
+                    .filter((project) => project.category === "Ticari")
+                    .map((project) => (
+                      <ProjectCard key={project.id} project={project} />
                     ))}
                 </div>
               </TabsContent>
@@ -100,9 +103,9 @@ export default function ProjectsPage() {
               <TabsContent value="industrial" className="mt-6 md:mt-8">
                 <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
                   {projects
-                    .filter((project) => project.category === "Industrial")
-                    .map((project, index) => (
-                      <ProjectCard key={index} project={project} />
+                    .filter((project) => project.category === "Endüstriyel")
+                    .map((project) => (
+                      <ProjectCard key={project.id} project={project} />
                     ))}
                 </div>
               </TabsContent>
@@ -110,9 +113,9 @@ export default function ProjectsPage() {
               <TabsContent value="renovation" className="mt-6 md:mt-8">
                 <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
                   {projects
-                    .filter((project) => project.category === "Renovation")
-                    .map((project, index) => (
-                      <ProjectCard key={index} project={project} />
+                    .filter((project) => project.category === "Renovasyon")
+                    .map((project) => (
+                      <ProjectCard key={project.id} project={project} />
                     ))}
                 </div>
               </TabsContent>
@@ -225,7 +228,7 @@ function ProjectCard({ project }) {
     <Card className="overflow-hidden group h-full">
       <div className="relative h-48 sm:h-56 md:h-64 w-full">
         <Image
-          src={project.image || "/placeholder.svg"}
+          src={project.image || "/images/project-1.png"}
           alt={project.title}
           fill
           className="object-cover transition-transform duration-500 group-hover:scale-110"
@@ -236,6 +239,7 @@ function ProjectCard({ project }) {
             <h3 className="text-lg md:text-xl font-bold text-white">{project.title}</h3>
             <p className="text-amber-300 mb-4">{project.category}</p>
             <Link href={`/projects/${project.id}`}>
+            <Link href={`/projects/${project.slug}`}>
               <Button variant="outline" className="text-white border-white hover:bg-white/20">
                 View Details
                 <ArrowRight className="ml-2 h-4 w-4" />
@@ -246,13 +250,13 @@ function ProjectCard({ project }) {
       </div>
       <CardHeader className="p-4 md:p-6">
         <CardTitle className="text-lg md:text-xl">{project.title}</CardTitle>
-        <CardDescription className="text-amber-600">{project.category}</CardDescription>
+        <CardDescription className="text-amber-600 dark:text-amber-400">{project.category}</CardDescription>
       </CardHeader>
       <CardContent className="p-4 pt-0 md:p-6 md:pt-0">
         <p className="text-gray-700 text-sm sm:text-base">{project.description}</p>
       </CardContent>
       <CardFooter className="p-4 md:p-6 pt-0">
-        <Link href={`/projects/${project.id}`}>
+        <Link href={`/projects/${project.slug}`}>
           <Button
             variant="outline"
             className="border-amber-500 text-amber-500 hover:bg-amber-500 hover:text-white text-sm sm:text-base"
@@ -265,75 +269,3 @@ function ProjectCard({ project }) {
     </Card>
   )
 }
-
-// Sample data
-const projects = [
-  {
-    id: "skyline-tower",
-    title: "Skyline Tower",
-    category: "Commercial",
-    description:
-      "A 25-story office building featuring modern design, energy-efficient systems, and state-of-the-art amenities.",
-    image: "/images/project-1.png",
-  },
-  {
-    id: "riverside-residences",
-    title: "Riverside Residences",
-    category: "Residential",
-    description: "Luxury condominium complex with 50 units, featuring high-end finishes and waterfront views.",
-    image: "/images/project-2.png",
-  },
-  {
-    id: "heritage-plaza",
-    title: "Heritage Plaza Renovation",
-    category: "Renovation",
-    description:
-      "Complete renovation of a historic commercial building, preserving its character while modernizing its functionality.",
-    image: "/images/project-3.png",
-  },
-  {
-    id: "metro-transit",
-    title: "Metro Transit Hub",
-    category: "Industrial",
-    description: "Multi-modal transportation facility designed for efficiency, durability, and passenger comfort.",
-    image: "/images/project-4.png",
-  },
-  {
-    id: "innovation-center",
-    title: "Innovation Center",
-    category: "Commercial",
-    description:
-      "Tech-focused office complex with collaborative spaces, advanced connectivity, and sustainable features.",
-    image: "/images/project-5.png",
-  },
-  {
-    id: "lakeside-community",
-    title: "Lakeside Community",
-    category: "Residential",
-    description: "Master-planned residential community with single-family homes, townhouses, and community amenities.",
-    image: "/images/project-6.png",
-  },
-  {
-    id: "central-warehouse",
-    title: "Central Distribution Facility",
-    category: "Industrial",
-    description: "200,000 sq ft distribution center with advanced logistics systems and energy-efficient design.",
-    image: "/images/industrial-1.png",
-  },
-  {
-    id: "mountain-retreat",
-    title: "Mountain Retreat",
-    category: "Residential",
-    description:
-      "Custom luxury home built with sustainable materials and designed to harmonize with its natural surroundings.",
-    image: "/images/residential-2.png",
-  },
-  {
-    id: "historic-theater",
-    title: "Grand Theater Restoration",
-    category: "Renovation",
-    description:
-      "Careful restoration of a 1920s theater, preserving historical elements while updating systems and accessibility.",
-    image: "/images/commercial-2.png",
-  },
-]
