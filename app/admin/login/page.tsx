@@ -61,7 +61,7 @@ export default function AdminLogin() {
               <Input
                 id="email"
                 type="email"
-                placeholder="admin@dalzemin.com"
+                placeholder="admin@dalzemin.com (Supabase'de oluşturun)"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -73,10 +73,18 @@ export default function AdminLogin() {
               <Input
                 id="password"
                 type="password"
+                placeholder="Supabase'de belirlediğiniz şifre"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
               />
+            </div>
+
+            <div className="text-sm text-gray-600 dark:text-gray-400 bg-blue-50 dark:bg-blue-900/20 p-3 rounded-md">
+              <p className="font-medium mb-1">İlk Kurulum:</p>
+              <p>1. Supabase Dashboard > Authentication > Users</p>
+              <p>2. "Add User" ile admin@dalzemin.com hesabı oluşturun</p>
+              <p>3. Bu sayfadan giriş yapın</p>
             </div>
 
             {error && (
